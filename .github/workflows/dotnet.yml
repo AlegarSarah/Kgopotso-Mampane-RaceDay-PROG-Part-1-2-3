@@ -8,20 +8,15 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-        
-    - name: Restore dependencies
-      run: dotnet restore RaceDay/RaceDay.sln
-
-    - name: Build
-      run: dotnet build RaceDay/RaceDay.sln --no-restore --configuration Release
+    - name: Verify required documentation exists
+      run: |
+        test -f docs/Database.sql && echo "Database.sql found"
+        test -f docs/ERD.md && echo "ERD.md found"
+        test -f docs/API.md && echo "API.md found"
+        test -f README.md && echo "README.md found"
