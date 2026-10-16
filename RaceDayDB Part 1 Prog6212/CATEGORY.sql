@@ -1,0 +1,5 @@
+CREATE TABLE Category(
+CategoryId INT PRIMARY KEY IDENTITY(1,1), 
+CategoryName VARCHAR(50) NOT NULL,
+Description VARCHAR(255)
+);

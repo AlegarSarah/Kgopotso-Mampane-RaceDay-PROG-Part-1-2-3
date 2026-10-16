@@ -1,0 +1,12 @@
+CREATE TABLE Event(
+EventId INT PRIMARY KEY IDENTITY(1,1),
+OrganiserId INT NOT NULL,
+EventName VARCHAR(100) NOT NULL,
+Description VARCHAR (500),
+EventDate DATE NOT NULL,
+StartTime TIME NOT NULL,
+Location VARCHAR(160) NOT NULL, 
+Status VARCHAR(30) NOT NULL,
+
+FOREIGN KEY (OrganiserId) REFERENCES [User](UserId)
+);
