@@ -1,85 +1,26 @@
-RaceDay API
+RaceDay - ASP.NET Core MVC Web Application (Part 3)
 
-Project Overview
+ Project Overview
+RaceDay is a comprehensive event management platform for sporting events. This repository contains the ASP.NET Core MVC web application (Part 3), which serves as the frontend user interface for both "Organisers" and "Participants". 
 
-RaceDay is an API-based system designed to manage race events, participants, categories, enrolments, routes, and race results.
+The application consumes the RESTful API developed in Part 2 and integrates Azure Blob Storage for cloud-based media management. The entire application is containerised using Docker and automated via GitHub Actions CI/CD workflows.
 
-The project uses a relational database and a REST API structure to support the management of race-day information.
 
-Main Features
 
-- Manage race events
-- Manage participants and users
-- Manage race categories
-- Manage event categories
-- Manage participant enrolments
-- Manage race routes
-- Record and manage race results
+ Architecture & Key Features
 
-Database
-
-The RaceDay database contains the following main tables:
-
-1. Category
-2. Enrolment
-3. Event
-4. EventCategory
-5. Result
-6. Route
-7. User
-
-Database documentation is available in the "/docs" folder.
-
-API Documentation
-
-The planned API endpoints are documented in:
-
-"/docs/API.md"
-
-The endpoint plan describes the main operations required by the RaceDay system.
-
-Entity Relationship Diagram
-
-The database structure is documented using an Entity Relationship Diagram (ERD).
-
-The ERD is available in:
-
-"/docs/ERD.md"
-
-Database Script
-
-The SQL database script is available in:
-
-"/docs/Database.sql"
-
-It contains the database tables, relationships, and sample data required for the project.
-
-Continuous Integration
-
-GitHub Actions is used to automatically build the project.
-
-The build workflow verifies that the project can be successfully compiled whenever changes are pushed to the repository.
-
-Build Status
-
-The GitHub Actions build workflow has been successfully configured and tested.
-
-Build status: PASSED
-
-Project Documentation
-
-Project documentation is organised in the "/docs" folder:
-
-- "Database.sql" — database creation script
-- "ERD.md" — Entity Relationship Diagram documentation
-- "API.md" — API endpoint plan
-
-Technologies
-
-- C#
-- .NET
-- SQL Server
-- REST API
-- Git
-- GitHub
-- GitHub Actions
+- Decoupled Architecture:** The MVC frontend contains zero direct database access or replicated business logic. All data operations are securely delegated to the Part 2 API via `HttpClient`.
+- Session-Based Authentication:** Manages role-based access control (Organiser vs. Participant). Unauthenticated users are strictly prevented from accessing protected routes.
+- **Organiser Interface:
+  - Event Management (Create, Edit, Delete events).
+  - Image Uploads for Event Banners (stored via Azure Blob Storage).
+  - Category Management (Age/Distance categories).
+  - Participant Enrolment Tracking & Race Results Entry (Capture finish times and positions).
+- Participant Interface:
+  - Event Discovery with dynamic search and filtering options.
+  - One-click Event Enrolment.
+  - Personal Dashboard showing enrolled events and race status.
+  - My Results page tracking past finish times and positions (e.g., 47th out of 312 finishers).
+  - Profile Management with avatar/picture upload.
+- Azure Blob Storage: Integrated seamlessly through the Part 2 API to securely store and render event images and profile photos.
+- Responsive UI: Built with Bootstrap using a modern, energetic sporting visual theme with visual color-coding for status tracking (e.g., Green for Confirmed, Amber for Pending).
