@@ -1,0 +1,36 @@
+﻿@model EnrolmentsPageVm
+@{
+    ViewData["Title"] = "Enrolments";
+}
+<a asp-action="Events" class="text-decoration-none">&larr; Back to events</a>
+<h1 class="rd-title mt-2">Enrolments: @Model.Event.Name</h1>
+@if (!Model.Enrolments.Any())
+{
+    <div class="alert alert-info">No participants have enrolled yet.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table rd-table align-middle">
+            <thead><tr><th>Participant</th><th>Category</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var e in Model.Enrolments)
+                {
+                    <tr>
+                        <td>@e.ParticipantName</td>
+                        <td>@e.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                        <td class="text-end">
+                            <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                <input type="hidden" name="enrolmentId" value="@e.EnrolmentId" />
+                                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                <button class="btn btn-sm btn-outline-success" name="status" value="Confirmed" type="submit">Confirm</button>
+                                <button class="btn btn-sm btn-outline-danger" name="status" value="Cancelled" type="submit">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

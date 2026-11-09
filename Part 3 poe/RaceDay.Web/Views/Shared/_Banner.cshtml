@@ -1,0 +1,9 @@
+﻿@model string
+@if (!string.IsNullOrEmpty(Model))
+{
+    <img src="@Model" class="rd-banner" alt="Event banner" />
+}
+else
+{
+    <div class="rd-banner rd-banner-empty">RACEDAY</div>
+}

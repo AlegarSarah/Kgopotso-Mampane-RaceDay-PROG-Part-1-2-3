@@ -1,0 +1,29 @@
+﻿@model List<MyResultVm>
+@{
+    ViewData["Title"] = "My results";
+}
+<h1 class="rd-title">My results</h1>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No published results yet. They appear here after an organiser publishes them.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table rd-table align-middle">
+            <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th></tr></thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>@r.EventName</td>
+                        <td>@r.EventDate.ToString("d MMM yyyy")</td>
+                        <td>@r.CategoryName</td>
+                        <td>@Fmt.Time(r.FinishTime)</td>
+                        <td><strong>@Fmt.Ordinal(r.Position)</strong> out of @r.TotalFinishers finishers</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,50 @@
+﻿@model ResultsPageVm
+@{
+    ViewData["Title"] = "Results"; var concluded = Model.Event.Date <= DateTime.Now;
+}
+<a asp-action="Events" class="text-decoration-none">&larr; Back to events</a>
+<h1 class="rd-title mt-2">Results: @Model.Event.Name</h1>
+@if (!concluded)
+{
+    <div class="alert alert-warning">This event has not taken place yet. Results can be captured once it concludes.</div>
+}
+@if (!Model.Rows.Any())
+{
+    <div class="alert alert-info">There are no enrolled participants for this event.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table rd-table align-middle">
+            <thead><tr><th>Participant</th><th>Category</th><th>Status</th><th>Finish time (hh:mm:ss)</th><th>Position</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var r in Model.Rows)
+                {
+                    <tr>
+                        <td>@r.Enrolment.ParticipantName</td>
+                        <td>@r.Enrolment.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="r.Enrolment.Status" /></td>
+                        @if (r.Result is not null)
+                        {
+                            <td>@Fmt.Time(r.Result.FinishTime)</td>
+                            <td>@Fmt.Ordinal(r.Result.Position)</td>
+                            <td><span class="badge rd-status rd-confirmed">Published</span></td>
+                        }
+                        else
+                        {
+                            <td colspan="3">
+                                <form asp-action="SaveResult" method="post" class="d-flex gap-2">
+                                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                                    <input type="hidden" name="enrolmentId" value="@r.Enrolment.EnrolmentId" />
+                                    <input name="finishTime" class="form-control" placeholder="00:45:12" pattern="\d{2}:\d{2}:\d{2}" required disabled="@(!concluded)" />
+                                    <input name="position" type="number" min="1" class="form-control" placeholder="Pos." required disabled="@(!concluded)" />
+                                    <button class="btn btn-rd" type="submit" disabled="@(!concluded)">Publish</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

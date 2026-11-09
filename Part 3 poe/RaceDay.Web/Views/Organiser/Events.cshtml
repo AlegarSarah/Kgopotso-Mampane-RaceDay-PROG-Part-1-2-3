@@ -1,0 +1,37 @@
+﻿@model List<EventSummaryVm>
+@{
+    ViewData["Title"] = "Manage events";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="rd-title mb-0">Manage events</h1>
+    <a class="btn btn-rd" asp-action="CreateEvent">+ Create event</a>
+</div>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No events yet.</div>
+}
+<div class="row g-4">
+    @foreach (var e in Model)
+    {
+        <div class="col-md-6 col-lg-4">
+            <div class="card rd-card h-100">
+                <partial name="_Banner" model='e.BannerUrl ?? ""' />
+                <div class="card-body">
+                    <span class="badge rd-type">@e.EventType</span>
+                    <h5 class="mt-2">@e.Name</h5>
+                    <p class="mb-1">@Fmt.Date(e.Date)</p>
+                    <p class="text-muted mb-0">@e.Location &middot; @e.DistanceKm km &middot; @e.EnrolmentCount enrolled</p>
+                </div>
+                <div class="card-footer bg-transparent border-0 pb-3 d-flex flex-wrap gap-2">
+                    <a class="btn btn-sm btn-outline-dark" asp-action="EditEvent" asp-route-id="@e.EventId">Edit</a>
+                    <a class="btn btn-sm btn-outline-dark" asp-action="Categories" asp-route-eventId="@e.EventId">Categories</a>
+                    <a class="btn btn-sm btn-outline-dark" asp-action="Enrolments" asp-route-eventId="@e.EventId">Enrolments</a>
+                    <a class="btn btn-sm btn-outline-dark" asp-action="Results" asp-route-eventId="@e.EventId">Results</a>
+                    <form asp-action="DeleteEvent" asp-route-id="@e.EventId" method="post" class="d-inline">
+                        <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Delete this event? This also removes its enrolments.')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

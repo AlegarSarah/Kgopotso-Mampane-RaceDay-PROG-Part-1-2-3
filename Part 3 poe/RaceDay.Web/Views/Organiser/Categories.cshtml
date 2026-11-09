@@ -1,0 +1,54 @@
+﻿@model CategoriesVm
+@{
+    ViewData["Title"] = "Categories";
+}
+<a asp-action="Events" class="text-decoration-none">&larr; Back to events</a>
+<h1 class="rd-title mt-2">Categories: @Model.Event.Name</h1>
+<div class="row g-4">
+    <div class="col-md-6">
+        <h4 class="rd-sub">On this event</h4>
+        @if (!Model.Linked.Any())
+        {
+            <p class="text-muted">No categories yet.</p>
+        }
+        else
+        {
+
+            <ul class="list-group">@foreach (var c in Model.Linked) {
+                <li class="list-group-item d-flex justify-content-between">@c.Name <span class="badge rd-type">@c.CategoryType</span></li>
+            }
+        </ul>
+    }
+</div>
+<div class="col-md-6">
+    <div class="card rd-card mb-3">
+        <div class="card-body">
+            <h5>Create a new category</h5>
+            <form asp-action="AddCategory" method="post">
+                <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                <input name="name" class="form-control mb-2" placeholder="e.g. Under 20, Senior, 10km, 21km" />
+                <select name="categoryType" class="form-select mb-2"><option>Age</option><option>Distance</option></select>
+                <button class="btn btn-rd" type="submit">Add category</button>
+            </form>
+        </div>
+    </div>
+    @if (Model.Available.Any())
+    {
+        <div class="card rd-card">
+            <div class="card-body">
+                <h5>Reuse an existing category</h5>
+                <form asp-action="LinkCategory" method="post">
+                    <input type="hidden" name="eventId" value="@Model.Event.EventId" />
+                    <select name="categoryId" class="form-select mb-2">
+                        @foreach (var c in Model.Available)
+                        {
+                            <option value="@c.CategoryId">@c.Name (@c.CategoryType)</option>
+                        }
+                    </select>
+                    <button class="btn btn-outline-dark" type="submit">Add to event</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+</div>

@@ -1,0 +1,34 @@
+﻿@model EventFormVm
+@{
+    var isNew = Model.EventId == 0;
+    ViewData["Title"] = isNew ? "Create event" : "Edit event";
+}
+<h1 class="rd-title">@ViewData["Title"]</h1>
+<form asp-controller="Organiser" asp-action='@(isNew ? "CreateEvent" : "EditEvent")' method="post" enctype="multipart/form-data" class="rd-form">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    <input type="hidden" asp-for="EventId" />
+    <input type="hidden" asp-for="BannerUrl" />
+    <div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+    <div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" rows="3" class="form-control"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="Date" class="form-label"></label><input asp-for="Date" type="datetime-local" class="form-control" /><span asp-validation-for="Date" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3"><label asp-for="Location" class="form-label"></label><input asp-for="Location" class="form-control" /><span asp-validation-for="Location" class="text-danger"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label asp-for="DistanceKm" class="form-label"></label><input asp-for="DistanceKm" type="number" step="0.1" class="form-control" /><span asp-validation-for="DistanceKm" class="text-danger"></span></div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="EventType" class="form-label"></label>
+            <select asp-for="EventType" class="form-select"><option>Run</option><option>Walk</option><option>Cycle</option></select>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Banner" class="form-label"></label>
+        @if (!string.IsNullOrEmpty(Model.BannerUrl))
+        {
+            <div class="mb-2"><img src="@Model.BannerUrl" class="rd-banner-thumb" alt="Current banner" /></div>
+        }
+        <input asp-for="Banner" type="file" accept="image/*" class="form-control" />
+    </div>
+    <button class="btn btn-rd" type="submit">Save event</button>
+    <a class="btn btn-outline-dark" asp-action="Events">Cancel</a>
+</form>

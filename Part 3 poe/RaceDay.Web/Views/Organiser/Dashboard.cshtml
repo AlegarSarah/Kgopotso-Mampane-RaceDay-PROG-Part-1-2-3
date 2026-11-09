@@ -1,0 +1,54 @@
+﻿@model List<EventSummaryVm>
+@{
+    ViewData["Title"] = "Dashboard";
+    var upcoming = Model.Where(e => e.Date >= DateTime.Now).OrderBy(e => e.Date).ToList();
+}
+<h1 class="rd-title">Organiser dashboard</h1>
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="rd-stat"><div class="rd-stat-num">@Model.Count</div>Events created</div></div>
+    <div class="col-md-4"><div class="rd-stat"><div class="rd-stat-num">@upcoming.Count</div>Upcoming events</div></div>
+    <div class="col-md-4"><div class="rd-stat"><div class="rd-stat-num">@Model.Sum(e => e.EnrolmentCount)</div>Total enrolments</div></div>
+</div>
+
+<h2 class="rd-sub">Enrolments per event</h2>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have not created any events yet. <a asp-action="CreateEvent">Create your first event</a></div>
+}
+else
+{
+    <div class="table-responsive mb-4">
+        <table class="table rd-table align-middle">
+            <thead><tr><th>Event</th><th>Date</th><th>Location</th><th>Enrolments</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td>@e.Name</td>
+                        <td>@Fmt.Date(e.Date) @if (e.Date >= DateTime.Now) {
+                            <span class="badge rd-status rd-confirmed">Upcoming</span>
+                        }
+                    </td>
+                    <td>@e.Location</td>
+                    <td><strong>@e.EnrolmentCount</strong></td>
+                    <td class="text-end"><a class="btn btn-sm btn-outline-dark" asp-action="Enrolments" asp-route-eventId="@e.EventId">View enrolments</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+
+<h2 class="rd-sub">Upcoming event dates</h2>
+@if (!upcoming.Any())
+{
+    <p class="text-muted">No upcoming events.</p>
+}
+else
+{
+
+    <ul>@foreach (var e in upcoming) {
+        <li><strong>@e.Date.ToString("d MMM yyyy")</strong> &mdash; @e.Name (@e.Location)</li>
+    }
+</ul>
+}

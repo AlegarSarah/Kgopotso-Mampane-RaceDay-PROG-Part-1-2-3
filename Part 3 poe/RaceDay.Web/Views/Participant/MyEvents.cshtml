@@ -1,0 +1,28 @@
+﻿@model List<EnrolmentVm>
+@{
+    ViewData["Title"] = "My events";
+}
+<h1 class="rd-title">My events</h1>
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have not enrolled in any events yet. <a asp-action="Index">Browse events</a></div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table rd-table align-middle">
+            <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th></tr></thead>
+            <tbody>
+                @foreach (var e in Model)
+                {
+                    <tr>
+                        <td><a asp-action="Details" asp-route-id="@e.EventId">@e.EventName</a></td>
+                        <td>@Fmt.Date(e.EventDate)</td>
+                        <td>@e.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="e.Status" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

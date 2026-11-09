@@ -1,0 +1,60 @@
+﻿@model EventDetailsVm
+@{
+    ViewData["Title"] = Model.Event.Name; var e = Model.Event;
+}
+<a asp-action="Index" class="text-decoration-none">&larr; Back to events</a>
+<div class="row g-4 mt-1">
+    <div class="col-lg-7">
+        <partial name="_Banner" model='e.BannerUrl ?? ""' />
+        <h1 class="rd-title mt-3">@e.Name</h1>
+        <span class="badge rd-type">@e.EventType</span>
+        <p class="mt-3">@e.Description</p>
+        <ul class="list-unstyled">
+            <li><strong>Date:</strong> @Fmt.Date(e.Date)</li>
+            <li><strong>Location:</strong> @e.Location</li>
+            <li><strong>Distance:</strong> @e.DistanceKm km</li>
+        </ul>
+    </div>
+    <div class="col-lg-5">
+        <div class="card rd-card">
+            <div class="card-body">
+                <h4 class="rd-sub">Categories</h4>
+                @if (!Model.Categories.Any())
+                {
+                    <p class="text-muted">The organiser has not added categories yet.</p>
+                }
+                else
+                {
+                    <ul>@foreach (var c in Model.Categories) {
+                        <li>@c.Name <small class="text-muted">(@c.CategoryType)</small></li>
+                    }
+                </ul>
+            }
+
+            @if (Model.AlreadyEnrolled)
+            {
+                <div class="alert alert-success mb-0">You are already enrolled. <a asp-action="MyEvents">View my events</a></div>
+            }
+            else if (e.Date < DateTime.Now)
+            {
+                <div class="alert alert-secondary mb-0">This event has already taken place.</div>
+            }
+            else if (Model.Categories.Any())
+            {
+                <form asp-controller="Participant" asp-action="Enrol" method="post" class="mt-3">
+                    <input type="hidden" name="eventId" value="@e.EventId" />
+                    <label class="form-label">Choose your category</label>
+                    <select name="categoryId" class="form-select mb-3">
+                        <option value="0">Select a category</option>
+                        @foreach (var c in Model.Categories)
+                        {
+                            <option value="@c.CategoryId">@c.Name</option>
+                        }
+                    </select>
+                    <button class="btn btn-rd w-100" type="submit">Enrol now</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+</div>
